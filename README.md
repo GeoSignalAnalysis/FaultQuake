@@ -1,1 +1,1 @@
-# FiShSCC
+# FiSHSCC
