@@ -1,0 +1,2 @@
+id Mmin b-value
+1 5.5 1.0
