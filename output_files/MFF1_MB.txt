@@ -1,2 +1,0 @@
-id Mmax sdMmax Tmean CV Telap Mo-rate name
-1 6.9 0.4 1107 1.39 36 2.5460e+16 MFF1
