@@ -1,0 +1,2 @@
+name ScR Length Dip Seismogenic_Thickness SRmin SRmax Mobs sdMobs Last_eq_time SCC
+Paganica WC94-N 20 50 14 0.6 0.8 6.3 0.1 2009 0.6
