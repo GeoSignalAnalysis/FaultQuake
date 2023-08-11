@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.4" xmlns:gml="http://www.opengis.net/gml">
+    <sourceModel name="Paganica2">
+        <simpleFaultSource id="2" name="Simple Fault Source" tectonicRegion="Active Shallow Crust">
+            <simpleFaultGeometry>
+                <gml:LineString>
+                    <gml:posList>
+                        <!-- Fill in coordinates here -->
+                    </gml:posList>
+                </gml:LineString>
+                <dip>50</dip>
+                <upperSeismoDepth>-9.000000e+00</upperSeismoDepth>
+                <lowerSeismoDepth>1.400000e+01</lowerSeismoDepth>
+            </simpleFaultGeometry>
+            <magScaleRel>WC94-N</magScaleRel>
+            <ruptAspectRatio>2.000000e+00</ruptAspectRatio>
+                <occurRates>1.313323e-03 1.043210e-03 8.286510e-04 6.582209e-04 5.228434e-04 4.153093e-04 3.298919e-04 2.620424e-04 2.081477e-04 1.653376e-04 1.313323e-04</occurRates>
+            </incrementalMFD>
+            <rake>9.000000e+01</rake>
+        </simpleFaultSource>
+    </sourceModel>
+</nrml>

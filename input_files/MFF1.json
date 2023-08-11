@@ -1,0 +1,14 @@
+{
+    "MFF1": {
+        "ScR": "WC94-R",
+        "Length": 37,
+        "Dip": 40,
+        "Seismogenic_Thickness": 20,
+        "SRmin": 2.88,
+        "SRmax": 4.32,
+        "Mobs": 5.7,
+        "sdMobs": 0.05,
+        "Last_eq_time": 1987,
+        "SCC": 0.205
+    }
+}
