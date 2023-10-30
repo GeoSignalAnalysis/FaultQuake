@@ -6,7 +6,7 @@
 
 
 #  FaultQuake: An Open-Source Python Tool for Estimating Seismic Activity Rates in Faults
-FaultQuake is primarily developed and tested on Debian-based Linux OS systems. Therefore, we suggest using IPIML on such environments for the best experience. While it's possible to use FaultQuake on Windows and macOS, there may be challenges during compiling and running the workflow due to potential compatibility issues.
+FaultQuake is primarily developed and tested on Debian-based Linux OS systems. Therefore, we suggest using FaultQuake on such environments for the best experience. While it's possible to use FaultQuake on Windows and macOS, there may be challenges during compiling and running the workflow due to potential compatibility issues.
 
 We greatly value community contributions and are steadfastly committed to continuously addressing and resolving any bugs that arise in the repository. Should you encounter any issues, please don't hesitate to contact us.
 
