@@ -1,6 +1,6 @@
 # FaultQuake
 
-![FaultQuake]([https://github.com/SigProSeismology/IPIML/raw/main/IPIML_workflow.png](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/workflow_faultQuake15.png))
+![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/workflow_faultQuake15.png)
 
 
 
