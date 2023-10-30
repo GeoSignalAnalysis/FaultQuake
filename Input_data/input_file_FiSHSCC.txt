@@ -1,0 +1,2 @@
+name ScR Length Dip Seismogenic_Thickness SRmin SRmax Mobs sdMobs Last_eq_time SCC
+MFF1 WC94-R 37 40 20 2.88 4.32 5.7 0.05 1987 0.205
