@@ -10,12 +10,12 @@ IPIML is primarily developed and tested on Debian-based Linux OS systems. Theref
 
 We greatly value community contributions and are steadfastly committed to continuously addressing and resolving any bugs that arise in the repository. Should you encounter any issues, please don't hesitate to contact us.
 
-We implement the IPIML workflow in six steps, using an IPIML conda environments:
+We implement the IPIML workflow in six steps, using a FaultQuake conda environment:
 
 ## Installation
 The installation guides for these environments are provided below:
 
-# IPIML envoronment:
+# FaultQuake environment:
 Create and activate a conda environment, IPIML for detecting the primary events:
 If you want to process with CPU:
 ```bash
