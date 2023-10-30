@@ -57,7 +57,7 @@ If you have any questions about the usage of this package or find bugs in the co
 
 ## Contact information 
 Copyright(C) 2023 Nasrin Tavakolizadeh 
-Author: Nasrin Tavakolizadeh (n.tavakolizadeh@ubi.pt), Hamzeh Mohammadigheymasi (hamzeh@ubi.pt)
+Author: Nasrin Tavakolizadeh (n.tavakolizadeh@ubi.pt), Hamzeh Mohammadigheymasi (hamzeh@ubi.pt), Francesco Visini (francesco.visini@ingv.it)
 
 
 
