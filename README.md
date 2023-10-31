@@ -1,6 +1,6 @@
 # FaultQuake
 
-![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/OVCW_workflow.pdf)
+![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/drawing_conflation6.png)
 ![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/FaultQuake_workflow.pdf)
 
 
