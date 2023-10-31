@@ -19,9 +19,14 @@ The installation guides for these environments are provided below:
 Create and activate a conda environment, FaultQuake for detecting the primary events:
 
 ```bash
-conda config --add channels conda-forge
-conda config --set channel_priority strict
+conda env create -n FaultQuake
 conda activate FaultQuake
+pip install numpy
+pip install scipy
+pip install matplotlib
+pip install PyQt5
+
+
 ```
 
 
