@@ -1,8 +1,7 @@
 # FaultQuake
 
+![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/drawing_conflation6.pdf)
 ![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/workflow_faultQuake15.png)
-
-
 
 
 #  FaultQuake: An Open-Source Python Tool for Estimating Seismic Activity Rates in Faults
