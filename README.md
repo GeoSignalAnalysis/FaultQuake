@@ -1,7 +1,7 @@
 # FaultQuake
 
 ![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/OVCW.pdf)
-![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/FaultQuake_workflow.png)
+![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/FaultQuake_workflow.pdf)
 
 
 #  FaultQuake: An Open-Source Python Tool for Estimating Seismic Activity Rates in Faults
