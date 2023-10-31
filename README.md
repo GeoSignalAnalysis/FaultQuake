@@ -1,6 +1,15 @@
 # FaultQuake
 
+# OVCW workflow
+
 ![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/drawing_conflation6.png)
+
+
+
+# FaultQuake workflow
+
+
+
 ![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/FaultQuake_workflow.png)
 
 
