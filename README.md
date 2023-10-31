@@ -17,10 +17,19 @@ The installation guides for these environments are provided below:
 # FaultQuake environment:
 Create and activate a conda environment, FaultQuake for detecting the primary events:
 
+
 ```bash
 conda create -n faultquake python=3.10
 conda activate faultquake
 pip install numpy scipy matplotlib PyQt5
+
+```
+
+
+## How to run FaultQuake 
+```bash
+conda activate faultquake
+python ./FaultQuake.py
 
 ```
 
