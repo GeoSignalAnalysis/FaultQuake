@@ -1,5 +1,5 @@
 {
-    "MFF1": {
+    "FFF1": {
         "ScR": "WC94-R",
         "year_for_calculations": 2023,
         "Length": 37,
@@ -11,29 +11,29 @@
         "sdMobs": 0.05,
         "Last_eq_time": 1987,
         "SCC": 20.5,
-        "ShearModulus": "NaN",
-        "StrainDrop": 3,
+        "ShearModulus": 2,
+        "StrainDrop": 5,
         "Mmin": 5.5,
         "b-value": 0.9
     },
-    "MFF2": {
+    "FFF2": {
         "ScR": "WC94-R",
         "year_for_calculations": 2023,
         "Length": 49,
         "Dip": 40,
         "Seismogenic_Thickness": 15,
-        "SRmin": 3.6,
-        "SRmax": 1.36,
+        "SRmin": 1.36,
+        "SRmax": 3.6,
         "Mobs": 6.4,
         "sdMobs": 0.05,
         "Last_eq_time": 2021,
         "SCC": 20.5,
-        "ShearModulus": 5,
-        "StrainDrop": "NaN",
+        "ShearModulus": 2,
+        "StrainDrop": 5,
         "Mmin": 5.5,
         "b-value": 0.9
     },
-        "ZFF": {
+        "FFF3": {
         "ScR": "WC94-R",
         "year_for_calculations": 2023,
         "Length": 22,
@@ -45,10 +45,9 @@
         "sdMobs": 0.05,
         "Last_eq_time": 1497,
         "SCC": 20.5,
-        "ShearModulus": "NaN",
-        "StrainDrop": 9,
+        "ShearModulus": 2,
+        "StrainDrop": 5,
         "Mmin": 5.5,
         "b-value": 0.9
     }
 }
-
