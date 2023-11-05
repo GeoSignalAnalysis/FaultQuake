@@ -6,9 +6,84 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import argparse
 import json
 
+
+class InfoWindow(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Information")
+        self.setGeometry(100, 100, 600, 400) # Adjusted size for better visibility
+        layout = QtWidgets.QVBoxLayout()
+        info_text = """
+        {
+            "MFF1": {
+                "ScR": "WC94-R",
+                "year_for_calculations": 2023,
+                "Length": 37,
+                "Dip": 40,
+                "Seismogenic_Thickness": 20,
+                "SRmin": 2.88,
+                "SRmax": 4.32,
+                "Mobs": 5.7,
+                "sdMobs": 0.05,
+                "Last_eq_time": 1987,
+                "SCC": 20.5,
+                "ShearModulus": "NaN",
+                "StrainDrop": 3,
+                "Mmin": 5.5,
+                "b-value": 0.9
+            },
+        }
+        """
+        # Use a scrollable area if the text is too large
+        scroll_area = QtWidgets.QScrollArea()
+        self.label = QtWidgets.QLabel(info_text)
+        self.label.setWordWrap(True)
+        scroll_area.setWidget(self.label)
+        scroll_area.setWidgetResizable(True)
+        layout.addWidget(scroll_area)
+        self.setLayout(layout)
+
+
+
+class InfoWindow(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Information")
+        self.setGeometry(100, 100, 600, 400) # Adjusted size for better visibility
+        layout = QtWidgets.QVBoxLayout()
+        info_text = """
+        {
+            "MFF1": {
+                "ScR": "WC94-R",
+                "year_for_calculations": 2023,
+                "Length": 37,
+                "Dip": 40,
+                "Seismogenic_Thickness": 20,
+                "SRmin": 2.88,
+                "SRmax": 4.32,
+                "Mobs": 5.7,
+                "sdMobs": 0.05,
+                "Last_eq_time": 1987,
+                "SCC": 20.5,
+                "ShearModulus": "NaN",
+                "StrainDrop": 3,
+                "Mmin": 5.5,
+                "b-value": 0.9
+            },
+        }
+        """
+        # Use a scrollable area if the text is too large
+        scroll_area = QtWidgets.QScrollArea()
+        self.label = QtWidgets.QLabel(info_text)
+        self.label.setWordWrap(True)
+        scroll_area.setWidget(self.label)
+        scroll_area.setWidgetResizable(True)
+        layout.addWidget(scroll_area)
+        self.setLayout(layout)
+
 def browse_file(ui, self=None):
     options = QFileDialog.Options()
-    file_path, _ = QFileDialog.getOpenFileName(None, "Select the input file:", "",
+    file_path, _ = QFileDialog.getOpenFileName(None, "Select the input file:", "Choose one:",
                                                "JSON files (*.json);;All files (*)", options=options)
     if file_path:
         # Store the selected file path in the class variable
@@ -102,7 +177,7 @@ class Ui_Frame(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.label = QtWidgets.QLabel(self.frame)
-        self.label.setGeometry(QtCore.QRect(70, 120, 291, 41))
+        self.label.setGeometry(QtCore.QRect(70, 120, 321, 41))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(16)
@@ -198,7 +273,7 @@ class Ui_Frame(object):
         self.textEdit_4.setPalette(palette)
         self.textEdit_4.setObjectName("textEdit_4")
         self.pushButton_3 = QtWidgets.QPushButton(self.frame_2)
-        self.pushButton_3.setGeometry(QtCore.QRect(60, 460, 291, 41))
+        self.pushButton_3.setGeometry(QtCore.QRect(60, 560, 291, 41))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(17)
@@ -214,7 +289,7 @@ class Ui_Frame(object):
         self.pushButton_5.setFont(font)
         self.pushButton_5.setObjectName("pushButton_5")
         self.pushButton_6 = QtWidgets.QPushButton(self.frame_2)
-        self.pushButton_6.setGeometry(QtCore.QRect(60, 560, 291, 41))
+        self.pushButton_6.setGeometry(QtCore.QRect(60, 460, 291, 41))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(17)
@@ -222,6 +297,7 @@ class Ui_Frame(object):
         font.setWeight(50)
         self.pushButton_6.setFont(font)
         self.pushButton_6.setObjectName("pushButton_6")
+        self.pushButton_6.clicked.connect(self.open_info_window)
         self.horizontalLayout.addWidget(self.frame_2)
         self.retranslateUi(Frame)
         QtCore.QMetaObject.connectSlotsByName(Frame)
@@ -245,10 +321,10 @@ class Ui_Frame(object):
             raise ValueError(
                 "Consider inputting a proper number for 'Probability Time Interval', and 'Magnitude Bin Size'")
         faults_u = momentbudget(faults,ProjFol='Outputs')
-        sactivityrate(faults_u, mfdo, PTI=50, MBS=0.1, ProjFol='Outputs')
+        if ProjFol == '':
+            ProjFol == 'Outputs'
 
-        aaa=111
-
+        sactivityrate(faults_u, mfdo, PTI, MBS, ProjFol='Outputs')
     def set_mfdo(self, index):
         options = [
             "Magnitude Frequency Distribution options",
@@ -257,39 +333,32 @@ class Ui_Frame(object):
         ]
         mfdo = options[index]  # Get the selected option
         self.mfdo = mfdo  # Store the selected value for later use in the SeismicActivityRate method
-
-
+    def open_info_window(self):
+        self.info_window = InfoWindow()
+        self.info_window.show()
     def retranslateUi(self, Frame):
         _translate = QtCore.QCoreApplication.translate
         Frame.setWindowTitle(_translate("FaultQuake", "FaultQuake"))
         self.pushButton.setText(_translate("FaultQuake", "Browse"))
         self.pushButton_2.setText(_translate("FaultQuake", "RUN"))
-        self.comboBox.setItemText(0, _translate("FaultQuake", "Magnitude Frequency Distribution options"))
-        # self.comboBox.setItemText(1, _translate("FaultQuake", "Single-Value Model(Poisson)"))
-        # self.comboBox.setItemText(2, _translate("FaultQuake", "Single-Value Model(BPT)"))
-        # self.comboBox.setItemText(3, _translate("FaultQuake", "Single-Value Model(User defined prob)"))
+        self.comboBox.setItemText(0, _translate("FaultQuake", "Choose one:"))
         self.comboBox.setItemText(1, _translate("FaultQuake", "Characteristic Gaussian"))
-        # self.comboBox.setItemText(5, _translate("FaultQuake", "Characteristic gaussian(BPT)"))
-        # self.comboBox.setItemText(6, _translate("FaultQuake", "Characteristic gaussian(User defined prob)"))
-        # self.comboBox.setItemText(7, _translate("FaultQuake", "Classical Gutenberg Richter"))
         self.comboBox.setItemText(2, _translate("FaultQuake", "Truncated Gutenberg Richter"))
-        self.label.setText(_translate("FaultQuake", "Activity Rate calculation options:"))
+        self.label.setText(_translate("FaultQuake", "Magnitude Frequency Distribution:"))
         self.label_2.setText(_translate("FaultQuake", "Select the input file:"))
         self.label_3.setText(_translate("FaultQuake", "Project Folder name:"))
         self.label_4.setText(_translate("FaultQuake", "Magnitude Bin:"))
         self.label_5.setText(_translate("FaultQuake", "Probability Window Interval (years):"))
         self.label_6.setText(_translate("FaultQuake", "Discriptions:"))
-        self.pushButton_3.setText(_translate("FaultQuake", "FaultQuake Input file format"))
+        self.pushButton_3.setText(_translate("FaultQuake", "FaultQuake Output file format"))
         self.pushButton_5.setText(_translate("FaultQuake", "Scale-Relationship selection"))
-        self.pushButton_6.setText(_translate("FaultQuake", "FaultQuke output file format"))
-
+        self.pushButton_6.setText(_translate("FaultQuake", "FaultQuke Input file format"))
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     Frame = QtWidgets.QFrame()
     ui = Ui_Frame()
     ui.setupUi(Frame)
     Frame.show()
-    # Set the window flag to keep the application on top
     Frame.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
     Frame.show()
     sys.exit(app.exec_())
