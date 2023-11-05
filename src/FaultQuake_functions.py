@@ -5,6 +5,268 @@ import scipy.stats as stats
 import matplotlib.pyplot as plt
 from scipy.integrate import trapz
 import math
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+import os
+
+
+# DATA = defaultdict(dict)
+
+import os
+
+def export_faults_to_xml(faults, outputfilename):
+    # Check if './output_files/Fault_OQ' folder exists, if not, create it
+    os.makedirs(f'./{outputfilename}/Fault_OQ', exist_ok=True)
+
+    for fault_name in faults:
+        # ScR = faults[fault_name]['ScR']
+        # Length = np.append(Length, faul
+        xml_filename = f'./{outputfilename}/Fault_OQ/{fault_name}.xml'
+        current_directory = os.getcwd()
+        print(f'Current directory: {current_directory}')
+
+        # Determine XML filename from fault name and save in './Sources' folder
+        xml_filename = f'./{outputfilename}/Fault_OQ/{fault_name}.xml'
+        with open(xml_filename, 'w') as fid:
+            # Write the header information
+            fid.write('<?xml version="1.0" encoding="utf-8"?>\n')
+            fid.write('<nrml xmlns="http://openquake.org/xmlns/nrml/0.4" xmlns:gml="http://www.opengis.net/gml">\n')
+            fid.write(f'    <sourceModel name="{fault_name}">\n')
+
+            # Write the fault details to the XML
+            fid.write(
+                f'        <simpleFaultSource id="{faults[fault_name]["id"]}" name="Simple Fault Source" tectonicRegion="Active Shallow Crust">\n')
+            fid.write('            <simpleFaultGeometry>\n')
+            fid.write('                <gml:LineString>\n')
+            fid.write('                    <gml:posList>\n')
+            fid.write('                        <!-- Fill in coordinates here -->\n')
+            fid.write('                    </gml:posList>\n')
+            fid.write('                </gml:LineString>\n')
+            fid.write(f'                <dip>{faults[fault_name]["Dip"]}</dip>\n')
+            fid.write(
+                f'                <upperSeismoDepth>{faults[fault_name]["Seismogenic_Thickness"] - faults[fault_name]["Telap"]:e}</upperSeismoDepth>\n')
+            fid.write(f'                <lowerSeismoDepth>{faults[fault_name]["Seismogenic_Thickness"]:e}</lowerSeismoDepth>\n')
+            fid.write('            </simpleFaultGeometry>\n')
+            fid.write(f'            <magScaleRel>{faults[fault_name]["ScR"]}</magScaleRel>\n')
+            fid.write('            <ruptAspectRatio>2.0000000E+00</ruptAspectRatio>\n')  # Placeholder
+            # Uncomment the next line if incrementalMFD needs to be included
+            # fid.write(f'            <incrementalMFD minMag="{fault["Mmin"]}" binWidth="{fault["bin"]}">\n')
+            fid.write(f'                <occurRates>{" ".join(f"{rate:e}" for rate in faults[fault_name]["rates"])}</occurRates>\n')
+            fid.write('            </incrementalMFD>\n')
+            fid.write('            <rake>9.0000000E+01</rake>\n')  # Placeholder
+            fid.write('        </simpleFaultSource>\n')
+
+            # Finish the XML
+            fid.write('    </sourceModel>\n')
+            fid.write('</nrml>\n')
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+
+
+def TruncatedGR(fauls, c, d, outputfilename, faultnames, mags, mts, Morates, ids, nfault, bin, bs, DATA):
+    outputname = f"{outputfilename}_AR_TruncatedGR.txt"
+    with open(os.path.join('./output_files', outputname), 'w') as fidout:
+        # print a title, followed by a blank line
+        fidout.write('id Mmin bin rates name\n')
+        for i in range(nfault):  # cycle for number of faults
+            magnitude_range = np.arange(mts[i], mags[i] + bin, bin)
+            M = 10 ** (c * magnitude_range + d)
+            Beta = (2 / 3) * bs[i]
+            Mt = 10 ** (c * mts[i] + d)
+            Mxp = 10 ** (c * (mags[i] + bin) + d)  # Assume max magnitude is reached with an additional bin.
+            TruncGR = (((Mt / M) ** Beta - (Mt / Mxp) ** Beta) / (1 - (Mt / Mxp) ** Beta))
+            Incremental = np.concatenate((np.diff(TruncGR[::-1])[::-1], [TruncGR[-1]]))
+            Incremental_Morate = Incremental * M
+            Incremental_Morate_balanced = Incremental_Morate * Morates[i] / np.sum(Incremental_Morate)
+            cons_tassi_ind = Incremental * Incremental_Morate_balanced / Incremental_Morate
+            cumulative_rates = np.cumsum(cons_tassi_ind[::-1])[::-1]
+            Mbalanced = np.sum(cons_tassi_ind * M)
+            out_Rates = [ids[i], mts[i], bin] + cons_tassi_ind.tolist()
+
+            fault_data = {}
+            fault_data = {
+                "rates": out_Rates # Your 'i' index
+            }
+
+            # Adding the outputs of the moment budget to the faults dictionary
+            faults[faultname[i]].update(fault_data)
+
+            # Update DATA dictionary
+            DATA[faultnames[i]] = {'id': ids[i], 'rates': cons_tassi_ind, 'bin': bin}
+
+            # Write to output file
+            fidout.write(f"{ids[i]}, {mts[i]:3.1f}, {bin:3.1f}, ")
+            fidout.write(' '.join(f"{rate:5.4e}" for rate in cons_tassi_ind))
+            fidout.write(f", {faultnames[i]}\n")
+
+            # Plotting
+            plt.figure(i)
+            plt.semilogy(magnitude_range, cumulative_rates, 'ok')
+            plt.xlabel('magnitude')
+            plt.ylabel('annual cumulative rates')
+            plt.title(faultnames[i])
+
+            # Saving the figure
+            figname = f"{outputfilename}_AR_TruncatedGR_rates_{faultnames[i]}.eps"
+            plt.savefig(os.path.join('./output_files', figname), format='epsc')
+    export_faults_to_xml(faults, outputfilename)
+
+    aaa=111
+
+    return outputname
+
+
+
+
+def CHGaussPoiss(faults, c, d, outputfilename, faultname, mag, sdmag, Morate, id, nfault, w, Hpois, bin):
+    outputname = f"{outputfilename}_AR_ChGaussPoisson_rates.txt"
+    outputnameProbability = f"{outputfilename}_AR_ChGaussPoisson_Probability.txt"
+
+    # Create output_files directory if it doesn't exist
+    os.makedirs('./output_files/', exist_ok=True)
+
+    # Open files for writing the outputs
+    with open(f'./output_files/{outputname}', 'w') as fidout, open(f'./output_files/{outputnameProbability}',
+                                                                   'w') as fidoutProb:
+        # Print a title, followed by a blank line
+        fidout.write('id Mmin bin rates name\n')
+        fidoutProb.write('id Mmin window Probability name\n')
+
+        # Cycle for number of faults
+        for i in range(nfault):
+            magnitude_range = np.arange(mag[i] - sdmag[i], mag[i] + sdmag[i] + bin, bin)
+            M = 10 ** (c * magnitude_range + d)
+            pdf_mag = norm.pdf(magnitude_range, mag[i], sdmag[i])
+            total_moment = np.sum(pdf_mag * M)
+            ratio = Morate[i] / total_moment
+            balanced_pdf_moment = ratio * pdf_mag
+            Mo_balanced = np.sum(balanced_pdf_moment * M)  # for a check
+            CHgaussRATES = balanced_pdf_moment
+            cumCHgaussRATES = np.flip(np.cumsum(np.flip(CHgaussRATES)))
+
+            Mag_min = magnitude_range[0]
+            out_Rates = [id[i], Mag_min, bin] + CHgaussRATES.tolist()
+            out_Prob = [id[i], Mag_min, w, Hpois[i]]
+
+            fault_data = {}
+            fault_data = {
+                "rates": out_Rates # Your 'i' index
+            }
+
+            # Adding the outputs of the moment budget to the faults dictionary
+            faults[faultname[i]].update(fault_data)
+
+
+            # Writing to output files
+            rates_str = ', '.join(f"{rate:5.4e}" for rate in CHgaussRATES)
+            fidout.write(f"{id[i]}, {Mag_min:3.1f}, {bin:3.1f}, {rates_str}, {faultname[i]}\n")
+            fidoutProb.write(f"{id[i]}, {Mag_min:3.1f}, {w}, {Hpois[i]:5.3e}, {faultname[i]}\n")
+
+            # Plotting
+            plt.figure(i)
+            plt.semilogy(magnitude_range, cumCHgaussRATES, 'ok')
+            plt.xlabel('magnitude')
+            plt.ylabel('annual cumulative rates')
+            plt.title(faultname[i])
+            figname = f"./output_files/{outputfilename}_AR_ChGaussPoisson_rates_{faultname[i]}"
+            plt.savefig(figname, format='epsc')
+
+
+    export_faults_to_xml(faults, outputfilename)
+    aaa=111
+    return Mo_balanced
+
+
+# Example of function usage
+# output = CHGaussPoiss(c, d, outputfilename, faultname, mag, sdmag, Morate, id, nfault, w, Hpois, bin)
+
+
+
+
+        # Open the XML file for writing
+
+
+# Usage example with sample data
+
+
+
+
+def CHGaussBPT(faults, c, d, outputfilename, faultname, mag, sdmag, Tmean, Morate, id, nfault, w, Hbpt, bin):
+    outputname = f"{outputfilename}_AR_ChGaussBPT_rates.txt"
+    outputnameProbability = f"{outputfilename}_AR_ChGaussBPT_Probability.txt"
+
+    # Create output_files directory if it doesn't exist
+    os.makedirs('./output_files/', exist_ok=True)
+
+    # Open a file for writing the output
+    with open(f'./output_files/{outputname}', 'w') as fidout, open(f'./output_files/{outputnameProbability}',
+                                                                   'w') as fidoutProb:
+        # Print a title, followed by a blank line
+        fidout.write('id Mmin bin rates name\n')
+        fidoutProb.write('id Mmin window Probability name\n')
+
+        # Calculate a fictious Tmean following Pace et al., 2006 and a fictious Mo rate
+        Tfict = (-1 * w) / np.log(1 - Hbpt)
+        Morate_fict = Morate * (Tmean / Tfict)
+
+        Mo_balanced_fict = []
+
+        # Cycle for number of faults
+        for i in range(nfault):
+            magnitude_range = np.arange(mag[i] - sdmag[i], mag[i] + sdmag[i] + bin, bin)
+            M = 10 ** (c * magnitude_range + d)
+            pdf_mag = norm.pdf(magnitude_range, mag[i], sdmag[i])
+            total_moment = np.sum(pdf_mag * M)
+            ratio = Morate_fict[i] / total_moment
+            balanced_pdf_moment = ratio * pdf_mag
+            Mo_balanced_fict.append(np.sum(balanced_pdf_moment * M))
+            CHgaussRATES = balanced_pdf_moment
+            cumCHgaussRATES = np.flip(np.cumsum(np.flip(CHgaussRATES)))
+
+            Mag_min = magnitude_range[0]
+            out_Rates = [id[i], Mag_min, bin] + CHgaussRATES.tolist()
+            out_Prob = [id[i], Mag_min, w, Hbpt[i]]
+
+            fault_data = {}
+            # Assuming 'i' is an index variable
+            # You can replace this with your actual index
+            # Create a dictionary to store fault data
+            fault_data = {
+                "rates": out_Rates # Your 'i' index
+            }
+
+            # Adding the outputs of the moment budget to the faults dictionary
+            faults[faultname[i]].update(fault_data)
+
+            # Writing to output files
+            fidout.write(f"{id[i]}, {Mag_min:3.1f}, {bin:3.1f}, " + ', '.join(
+                f"{rate:5.4e}" for rate in CHgaussRATES) + f", {faultname[i]}\n")
+            fidoutProb.write(f"{id[i]}, {Mag_min:3.1f}, {w}, {Hbpt[i]:5.3e}, {faultname[i]}\n")
+
+            # Plotting
+            plt.figure(i)
+            plt.semilogy(magnitude_range, cumCHgaussRATES, 'ok')
+            plt.xlabel('magnitude')
+            plt.ylabel('annual cumulative rates')
+            plt.title(faultname[i])
+            figname = f"./output_files/{outputfilename}_AR_ChGaussBPT_rates_{faultname[i]}"
+            plt.savefig(figname, format='eps')
+
+    export_faults_to_xml(faults, outputfilename)
+
+
+    aaaaa=111
+
+    return Mo_balanced_fict
+
+
+# Example of function usage
+# output = CHGaussBPT(c, d, outputfilename, faultname, mag, sdmag, Tmean, Morate, id, nfault, w, Hbpt, bin)
+
 
 def kin2coeff(ScR):
     # Check if ScR is a list, and if so, convert it to a string
@@ -221,7 +483,8 @@ def conflate_pdfs(x, pdfs):
         conflated = conflated * pdf
 
     # Normalize the conflated distribution
-    conflated = conflated / np.trapz(x, np.abs(conflated))  # Ensure positive values
+    conflated = -conflated / np.trapz(x, np.abs(conflated))
+    conflated=np.abs(conflated) # Ensure positive values
 
     return conflated
 
