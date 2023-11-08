@@ -30,6 +30,7 @@ Create and activate a conda environment, FaultQuake for detecting the primary ev
 ```bash
 conda create -n faultquake python=3.10
 conda activate faultquake
+pip install statsmodels
 pip install numpy scipy matplotlib PyQt5
 
 ```
