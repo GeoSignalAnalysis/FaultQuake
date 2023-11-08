@@ -55,12 +55,12 @@ python ./FaultQuake.py
 
 BibTex:
 ```
-@inproceedings{tavakolizadeh2022extent,
-  title={To what extent do slip rates contribute to the seismic activity of faults?},
+@inproceedings{ntavakolizadeh2023,
+  title={FaultQuake: An Open-Source Python Tool for Estimating Seismic Activity Rates in Faults},
   author={Tavakolizadeh, Nasrin and Mohammadigheymasi, Hamzeh and Matias, Lu{\'\i}s and Silveira, Gra{\c{c}}a and Fernandes, Rui and Dolatabadi, Nima},
-  booktitle={EGU General Assembly Conference Abstracts},
-  pages={EGU22--12893},
-  year={2022}
+  booktitle={Computers and Geosciences},
+  pages={xxx},
+  year={xxx}
 }
 
 
