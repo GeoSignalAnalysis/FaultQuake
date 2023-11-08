@@ -1,11 +1,8 @@
 from src.SeismicActivityRate import momentbudget, sactivityrate # Import the function
-import sys
+import sys, argparse, json
 global faults
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
-import argparse
-import json
-
 
 class InfoWindow(QtWidgets.QWidget):
     def __init__(self):
@@ -44,33 +41,31 @@ class InfoWindow(QtWidgets.QWidget):
         self.setLayout(layout)
 
 
-
-class InfoWindow(QtWidgets.QWidget):
+class ScaleWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Information")
-        self.setGeometry(100, 100, 600, 400) # Adjusted size for better visibility
+        self.setGeometry(100, 100, 600, 400)  # Adjusted size for better visibility
         layout = QtWidgets.QVBoxLayout()
+
+        # Replace the existing info_text with the new content
         info_text = """
-        {
-            "MFF1": {
-                "ScR": "WC94-R",
-                "year_for_calculations": 2023,
-                "Length": 37,
-                "Dip": 40,
-                "Seismogenic_Thickness": 20,
-                "SRmin": 2.88,
-                "SRmax": 4.32,
-                "Mobs": 5.7,
-                "sdMobs": 0.05,
-                "Last_eq_time": 1987,
-                "SCC": 20.5,
-                "ShearModulus": "NaN",
-                "StrainDrop": 3,
-                "Mmin": 5.5,
-                "b-value": 0.9
-            },
-        }
+        set ScR as follows
+
+        Wells and Coppersmith (1984) relationships:
+        WC94-N - normal faults
+        WC94-R - reverse faults
+        WC94-S - strike slip faults
+        WC94-A - all the kinematics
+
+        Leonard (2010) relationships:
+        Le10-D - dip slip faults
+        Le10-S - strike slip faults
+        Le10-SCR - stable continental regions
+
+        Volcanic context relationships (Azzaro et al., 2015; Villamor et al.,
+        2001):
+        Volc - all the kinematics
         """
         # Use a scrollable area if the text is too large
         scroll_area = QtWidgets.QScrollArea()
@@ -80,7 +75,44 @@ class InfoWindow(QtWidgets.QWidget):
         scroll_area.setWidgetResizable(True)
         layout.addWidget(scroll_area)
         self.setLayout(layout)
-
+class OutWindow(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Information")
+        self.setGeometry(100, 100, 600, 400) # Adjusted size for better visibility
+        layout = QtWidgets.QVBoxLayout()
+        info_text = """
+<?xml version="1.0" encoding="utf-8"?>
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.4" xmlns:gml="http://www.opengis.net/gml">
+    <sourceModel name="FFF1">
+        <simpleFaultSource id="1" name="Simple Fault Source" tectonicRegion="Active Shallow Crust">
+            <simpleFaultGeometry>
+                <gml:LineString>
+                    <gml:posList>
+                        <!-- Fill in coordinates here -->
+                    </gml:posList>
+                </gml:LineString>
+                <dip>40</dip>
+                <upperSeismoDepth>-1.600000e+01</upperSeismoDepth>
+                <lowerSeismoDepth>2.000000e+01</lowerSeismoDepth>
+            </simpleFaultGeometry>
+            <magScaleRel>WC94-R</magScaleRel>
+            <ruptAspectRatio>2.0000000E+00</ruptAspectRatio>
+                <occurRates>2.325063e-01 1.889882e-01 1.536154e-01 1.248633e-01 1.014927e-01 8.249635e-02 6.705555e-02 5.450480e-02 4.430316e-02 3.601096e-02 2.927081e-02 2.379221e-02 1.933903e-02</occurRates>
+            </incrementalMFD>
+            <rake>9.0000000E+01</rake>
+        </simpleFaultSource>
+    </sourceModel>
+</nrml>
+        """
+        # Use a scrollable area if the text is too large
+        scroll_area = QtWidgets.QScrollArea()
+        self.label = QtWidgets.QLabel(info_text)
+        self.label.setWordWrap(True)
+        scroll_area.setWidget(self.label)
+        scroll_area.setWidgetResizable(True)
+        layout.addWidget(scroll_area)
+        self.setLayout(layout)
 def browse_file(ui, self=None):
     options = QFileDialog.Options()
     file_path, _ = QFileDialog.getOpenFileName(None, "Select the input file:", "Choose one:",
@@ -98,7 +130,6 @@ def browse_file(ui, self=None):
         if faults:
             # Access the loaded JSON data (example)
             print(f"Loaded JSON data: {len(faults)} faults found.")
-
 class Ui_Frame(object):
     def setupUi(self, Frame):
         Frame.setObjectName("Frame")
@@ -127,7 +158,6 @@ class Ui_Frame(object):
         font.setWeight(50)
         self.pushButton.setFont(font)
         self.pushButton.setObjectName("pushButton")
-        # Define class variables to store the loaded JSON data
         self.json_data = None
         self.input_file_var = ""
         # Button 2 (RUN)
@@ -281,6 +311,8 @@ class Ui_Frame(object):
         font.setWeight(50)
         self.pushButton_3.setFont(font)
         self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.clicked.connect(self.open_out_info_window)
+
         self.pushButton_5 = QtWidgets.QPushButton(self.frame_2)
         self.pushButton_5.setGeometry(QtCore.QRect(60, 510, 291, 41))
         font = QtGui.QFont("Times New Roman", 17)
@@ -288,6 +320,7 @@ class Ui_Frame(object):
         font.setWeight(50)
         self.pushButton_5.setFont(font)
         self.pushButton_5.setObjectName("pushButton_5")
+        self.pushButton_5.clicked.connect(self.open_scale_window)
         self.pushButton_6 = QtWidgets.QPushButton(self.frame_2)
         self.pushButton_6.setGeometry(QtCore.QRect(60, 460, 291, 41))
         font = QtGui.QFont()
@@ -301,12 +334,10 @@ class Ui_Frame(object):
         self.horizontalLayout.addWidget(self.frame_2)
         self.retranslateUi(Frame)
         QtCore.QMetaObject.connectSlotsByName(Frame)
-
     def SeismicActivityRate(self, faults, mfdo):
         ProjFol = self.textEdit.toPlainText()
         PTI = self.textEdit_3.toPlainText()
         MBS = self.textEdit_4.toPlainText()
-
         # Set default values if empty
         if not PTI:
             PTI = "50"
@@ -323,7 +354,6 @@ class Ui_Frame(object):
         faults_u = momentbudget(faults,ProjFol='output_files')
         if ProjFol == '':
             ProjFol == 'output_files'
-
         sactivityrate(faults_u, mfdo, PTI, MBS, ProjFol='output_files')
     def set_mfdo(self, index):
         options = [
@@ -333,9 +363,21 @@ class Ui_Frame(object):
         ]
         mfdo = options[index]  # Get the selected option
         self.mfdo = mfdo  # Store the selected value for later use in the SeismicActivityRate method
+
     def open_info_window(self):
         self.info_window = InfoWindow()
+        self.info_window.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)  # Set the window to stay on top
         self.info_window.show()
+
+    def open_out_info_window(self):
+        self.info_window = OutWindow()
+        self.info_window.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)  # Set the window to stay on top
+        self.info_window.show()
+
+    def open_scale_window(self):
+        self.scale_window = ScaleWindow()  # You can create a separate InfoWindow for the scale window if needed
+        self.scale_window.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)  # Set the window to stay on top
+        self.scale_window.show()
     def retranslateUi(self, Frame):
         _translate = QtCore.QCoreApplication.translate
         Frame.setWindowTitle(_translate("FaultQuake", "FaultQuake"))
@@ -355,10 +397,14 @@ class Ui_Frame(object):
         self.pushButton_6.setText(_translate("FaultQuake", "FaultQuke Input file format"))
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
+
     Frame = QtWidgets.QFrame()
     ui = Ui_Frame()
     ui.setupUi(Frame)
+
+    # Show the main window, raise it to the top, and activate it
     Frame.show()
-    Frame.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
-    Frame.show()
+    Frame.raise_()
+    Frame.activateWindow()
+
     sys.exit(app.exec_())
