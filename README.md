@@ -3,7 +3,7 @@
 
 # OVCW workflow
 
-![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/drawing_conflation15-1.png)
+![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/drawing_conflation16-1.png)
 
 
 
