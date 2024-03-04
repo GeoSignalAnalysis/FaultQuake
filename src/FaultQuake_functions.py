@@ -21,7 +21,7 @@ def export_faults_to_xml(faults, Project_foldername):
 
     for fault_name in faults:
         # ScR = faults[fault_name]['ScR']
-        # Length = np.append(Length, faul
+        # Length = np.append(Length, fault)
         xml_filename = f'./{Project_foldername}/Fault_OQ/{fault_name}.xml'
         current_directory = os.getcwd()
         print(f'Current directory: {current_directory}')
@@ -86,6 +86,11 @@ def TruncatedGR(faults, c, d, Project_foldername, faultnames, mags, mts, Morates
             cumulative_rates = np.cumsum(cons_tassi_ind[::-1])[::-1]
             Mbalanced = np.sum(cons_tassi_ind * M)
             out_rates = cons_tassi_ind.tolist()
+
+            # cumulative_rates = np.cumsum(np.flipud(cons_tassi_ind))
+            # cumulative_rates = np.flipud(cumulative_rates)
+
+
 
             fault_data = {}
             fault_data = {
@@ -275,6 +280,7 @@ def CHGaussBPT(faults, c, d, Project_foldername, faultname, mag, sdmag, Tmean, M
 
             plt.show()  # Show the plot
 
+            www=353635
 
 
 
@@ -334,8 +340,7 @@ def kin2coeff(ScR):
 ################################### Coefficient to magnitude function
 
 def coeff2mag(ScR, coeff, Length, Width, ARtable, mu, straindrop):
-    print("Hi")
-    print(Length)
+
     # Compute Magnitudes from scale- and from Aspect Ratio-relationship
     # Check if ScR is a list, and if so, convert it to a string
     if isinstance(ScR, list):

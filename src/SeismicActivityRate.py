@@ -9,6 +9,8 @@ from scipy.stats import norm
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from scipy.stats import invgauss
+from scipy.io import loadmat
+
 
 import statsmodels.api as sm
 
@@ -37,7 +39,6 @@ import statsmodels.api as sm
 #     fidout.write('id Mmax sdMmax Tmean CV Telap Mo-rate name\n')
 # temporary_pdf_storage = open('./output_files/temporary_pdf_storage.txt', 'w')
 # print('RUNNING...')
-
 # for item_name in faults:
 #     print(f"Item Name: {item_name}")
 # # mu_opt, straindrop_opt = ShearModulus, StrainDrop
@@ -45,13 +46,10 @@ import statsmodels.api as sm
 #     mu_opt = ShearModulus * 1e10
 # # if StrainDropFromInputFile != 1:
 #     straindrop_opt = StrainDrop * 1e-5
-
 # with open(imfile, 'r') as fid2:
 #     raw = fid2.read()
 # DATA = json.loads(raw)
 # fault_name = list(DATA.keys())
-
-
 # def momentbudget():
 #
 #     faults = self.browse_file()
@@ -60,9 +58,7 @@ import statsmodels.api as sm
 #         print(f"Item Name: {item_name}")
 #         mu_opt = ShearModulus * 1e10
 #         straindrop_opt = StrainDrop * 1e-5
-
-
-def momentbudget(faults,ProjFol):
+def momentbudget(faults, Zeta, Khi, Siggma, ProjFol):
     for fault, values in faults.items():
         if 'ShearModulus' in values and (values['ShearModulus'] is None):
             print(f"Fault {fault} has a 'NaN' ShearModulus value.")
@@ -83,12 +79,16 @@ def momentbudget(faults,ProjFol):
         Slipmin = faults[fault_name]['SRmin'];         Slipmax = faults[fault_name]['SRmax'];         mag = faults[fault_name]['Mobs']
         sdmag = faults[fault_name]['sdMobs'];         Last_eq_time = faults[fault_name]['Last_eq_time'];         SCC = faults[fault_name]['SCC']
         ShearModulusFromInputFile = faults[fault_name]['ShearModulus'];         StrainDropFromInputFile = faults[fault_name]['StrainDrop']
-        yfc = faults[fault_name]['year_for_calculations'];         Telap = yfc - Last_eq_time  # Perform element-wise subtraction
+        yfc = faults[fault_name]['year_for_calculations'];
+        # Last_eq_time = "nan"
+        # nan_value = np.nan if Last_eq_time.lower() == "nan" else Last_eq_time
+        # if isnan(Last_eq_time):
+        Telap = yfc - Last_eq_time  # Perform element-wise subtraction
         mu = ShearModulusFromInputFile;         straindrop = StrainDropFromInputFile;         Dip_radians = math.radians(Dip)  # Convert degrees to radians
         sine_Dip = math.sin(Dip_radians);        Length = Length * 1000;        Width = (Seismogenic_thickness * 1000) / sine_Dip
         V = (Slipmin + Slipmax) / 2000;        dV = V - (Slipmin / 1000)
         # DEFINITION OF COEFFICIENTS coefficients by Hanks & Kanamori, 1985
-        d = 9.1;   c = 1.5;   dMMO = 0.3  # standard deviation of the magnitude calculated by the seismic moment definition
+        d = 9.1;   c = 1.5;   dMMO = Siggma  # standard deviation of the magnitude calculated by the seismic moment definition
         # Calculation of the coefficient of the imported scale-relationship
         coeff, ARtable = kin2coeff(ScR)
         MRLD, MRA, dMRLD, dMRA, MAR, ar_coeff, LAR, legends_Mw = coeff2mag(ScR, coeff, Length, Width, ARtable, mu,
@@ -100,13 +100,16 @@ def momentbudget(faults,ProjFol):
         M1 = mag - Mmean
         # Conflation of Maximum magnitudes
         if mag < Mmean:
-            if abs(mag - Mmean) < 0.5:
+            if abs(mag - Mmean) < Zeta:
                 sdmag = sdmag
-            elif abs(mag - Mmean) > 0.5:
-                sdmag = np.mean(dM1) + 0.2 * abs(sdmag - np.mean(dM1))
+            elif abs(mag - Mmean) > Zeta:
+                sdmag = np.mean(dM1) + Khi * abs(mag - Mmean)
         else:
-            if abs(mag - Mmean) > 1:
+            if abs(mag - Mmean) < Zeta:
+                sdmag = sdmag
+            elif abs(mag - Mmean) > Zeta:
                 print('Warning: Please consider revising the geometry parameters.')
+
         M = [MMO, MAR, MRLD, MRA, mag];        dM = [dMMO, ar_coeff[2], dMRLD, dMRA, sdmag]
         dM = np.round(np.array(dM) * 100) / 100  # Round to two decimal places
         # Correctly assigning a row in a NumPy array
@@ -159,7 +162,8 @@ def momentbudget(faults,ProjFol):
         ii = fault_name
         namefig = 'Conflation_of_PDFs' + str(ii)
         # Set up the figure with your desired style
-        plt.style.use('dark_background')
+        # plt.style.use('dark_background')
+        plt.style.use('default')
         plt.figure(figsize=(8, 6))
         count_pdf = 0
         plt.plot(x_range_of_mag, pdf_magnitudes[count_pdf, :], linewidth=1.2, linestyle='-', color='blue',
@@ -184,45 +188,54 @@ def momentbudget(faults,ProjFol):
         Mmax1 = x_range_of_mag[np.argmax(conflated)]
 
         # Make Mmax visible by changing the color to white
-        plt.stem(Mmax1, np.max(conflated), linefmt='w-', markerfmt='wo', basefmt=' ')
-        stem_proxy = mpatches.Patch(color='white', label='Mmax')
+        plt.stem(Mmax1, np.max(conflated), linefmt='k-', markerfmt='ko', basefmt=' ')
+        stem_proxy = mpatches.Patch(color='black', label='Mmax')
         # Check LAR and Length conditions and define legend entries
         if LAR < Length:
             if not np.isnan(mag):
-                legendEntries = ['MMo'] + ['MAR'] + legends_Mw + ['MObs', 'sEM', 'CoP', 'Mmax']
+                legendEntries = ['MMo'] + ['MAR'] + legends_Mw + ['MObs', 'SEM', 'CoP', 'Mmax']
             else:
-                legendEntries = ['MMo'] + ['MAR'] + legends_Mw + ['sEM', 'CoP', 'Mmax']
+                legendEntries = ['MMo'] + ['MAR'] + legends_Mw + ['SEM', 'CoP', 'Mmax']
         else:
             if not np.isnan(mag):
-                legendEntries = ['MMo'] + legends_Mw + ['MObs', 'sEM', 'CoP', 'Mmax']
+                legendEntries = ['MMo'] + legends_Mw + ['MObs', 'SEM', 'CoP', 'Mmax']
             else:
-                legendEntries = ['MMo'] + legends_Mw + ['sEM', 'CoP'] + [] + ['Mmax']
+                legendEntries = ['MMo'] + legends_Mw + ['SEM', 'CoP'] + [] + ['Mmax']
         # Display the legend
         plt.legend(legendEntries)
         # plt.plot([Mmax1 - sigma_Mmax, Mmax1 + sigma_Mmax], [np.max(conflated), np.max(conflated)], linewidth=1.5,
         #          linestyle='-.', color='black')
         plt.fill_between(x_range_of_mag, 0, conflated, color='gold', alpha=0.25)
-        plt.xlabel('Magnitude', fontsize=14, fontname='Times New Roman')
-        plt.ylabel('Probability density function', fontsize=14, fontname='Times New Roman')
+        plt.xlabel('Magnitude', fontsize=14, fontname='Times')
+        plt.ylabel('Probability density function', fontsize=14, fontname='Times')
+        # plt.title(fault_name)
         # Plot settings:
         plt.ylim(0,)
-        # plt.xlim(5,)
+        plt.xlim(5,)
         plt.subplots_adjust(left=0.075, right=0.98, top=0.96, bottom=0.1)  # Adjust margins of the plot
         # Save the figure
 
-        if len(ProjFol)>0 :
-            figure_name="./"+ProjFol+"/Figures/"+ namefig + '.eps'
-            if not os.path.exists("./"+ProjFol+"/Figures/"):
+        if len(ProjFol) > 0:
+            figure_name = "./" + ProjFol + "/Figures/" + namefig + '.pdf'
+            if not os.path.exists("./" + ProjFol + "/Figures/"):
                 # If it doesn't exist, create it
-                os.makedirs("./"+ProjFol+"/Figures/")
+                os.makedirs("./" + ProjFol + "/Figures/")
         else:
-            figure_name="./"+'output_files'+"/Figures/"+ namefig + '.eps'
-            if not os.path.exists("./"+'output_files'+"/Figures/"):
+            figure_name = "./" + 'output_files' + "/Figures/" + namefig + '.pdf'
+            if not os.path.exists("./" + 'output_files' + "/Figures/"):
                 # If it doesn't exist, create it
-                os.makedirs("./"+'output_files'+"/Figures/")
-        plt.savefig(figure_name, dpi=800)  # Save the figure as a PNG file
+                os.makedirs("./" + 'output_files' + "/Figures/")
+
+        # Save the figure in PDF format with higher DPI
+        plt.savefig(figure_name, dpi=1200, bbox_inches='tight')  # Adjust the DPI value as needed
         # plt.title(ii)
         plt.show()  # Show the plot
+        Mmax1 = round(Mmax1 * 10) / 10
+        Mmax = Mmax1
+        # Save the figure
+        plt.savefig(namefig + '.pdf', dpi=1200, bbox_inches='tight')  # Adjust the DPI value as needed
+
+
         Mmax1 = round(Mmax1 * 10) / 10
         Mmax = Mmax1
         # Save the figure
@@ -231,8 +244,12 @@ def momentbudget(faults,ProjFol):
             L_forTmean = Length
         else:
             L_forTmean = LAR
+
+
         # Calculate Tmean
         Mmax=Mmax1
+        # sigma_Mmax=0.5
+        # Mmax=7.1
         output_Mmax_sigmaMmax = np.vstack([output_Mmax_sigmaMmax, [Mmax, sigma_Mmax]])
         Tmean = np.round(10 ** (d + c * Mmax) / (mu * V * L_forTmean * Width))  # Average recurrence time as defined in Field, 1999
         Tmean = np.round(Tmean * (1 / SCC))
@@ -326,6 +343,7 @@ def sactivityrate(faults, Fault_behaviour, w, bin, ProjFol):
     Hbpt = np.zeros(nfault)  # Initialize the Hbpt array
     Hpois = np.zeros(nfault)
     for i in range(nfault):
+        sdmag[i]=0.5
         magnitude_range = np.arange(mag[i] - sdmag[i], mag[i] + sdmag[i] + bin, bin)
         M = 10 ** (c * magnitude_range + d)
         pdf_mag = norm.pdf(magnitude_range, mag[i], sdmag[i])
@@ -342,8 +360,17 @@ def sactivityrate(faults, Fault_behaviour, w, bin, ProjFol):
                 print(
                     f'Warning: Telap for fault id {id[i]} is forced to be equal to 10*Tm to avoid computational problems')
             alpha = alpha_val[i]
-            scale = Tm / (alpha ** 2)
 
+            # from scipy.io import loadmat
+            #
+            # # Load the MATLAB file
+            # mat_data = loadmat('./data_matlab.mat')
+            # Telap = mat_data['Telap']
+            # w = mat_data['w']
+            # Tm = mat_data['Tm']
+            # alpha = mat_data['alpha']
+
+            scale = Tm / (alpha ** 2)
             # In MATLAB: cdf('inversegaussian', (Telap+w), Tm, (Tm/(alpha^2)))
             # In Python: using scipy.stats.invgauss
             Hbpt_a1 = invgauss.cdf((Telap + w) / scale, mu=Tm / scale)
@@ -357,11 +384,15 @@ def sactivityrate(faults, Fault_behaviour, w, bin, ProjFol):
         Hpois[Hpois > 1] = 1
 
     if Fault_behaviour == "Characteristic Gaussian" and Telapsed[i]:
+        # bin=0.2
         CHGaussBPT(faults, c, d, ProjFol, fault_name, mag, sdmag, Tmean, Morate, id, nfault, w, Hbpt, bin)
     elif Fault_behaviour == "Characteristic Gaussian" and ~Telapsed[i]:
         CHGaussPoiss(faults, c, d, ProjFol, fault_name, mag, sdmag, Morate, id, nfault, w, Hpois, bin)
     elif Fault_behaviour == "Truncated Gutenberg Richter":
         TruncatedGR(faults, c, d, ProjFol, fault_name, mag, mt, Morate, id, nfault, bin, b)
+    else:
+        print("wrong case")
+
 
 
 
