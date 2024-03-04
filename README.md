@@ -11,7 +11,7 @@
 
 
 
-![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/FaultQuake_workflow.png)
+![FaultQuake](https://github.com/GeoSignalAnalysis/FaultQuake/blob/main/workflow_faultQuake17-1.png)
 
 
 FaultQuake is primarily developed and tested on Debian-based Linux OS systems. Therefore, we suggest using FaultQuake in such environments for the best experience. While it's possible to use FaultQuake on Windows and macOS, there may be challenges during compiling and running the workflow due to potential compatibility issues.
