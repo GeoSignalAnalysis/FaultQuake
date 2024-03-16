@@ -55,7 +55,7 @@ python ./FaultQuake.py
 
 BibTex:
 ```
-@inproceedings{ntavakolizadeh2023,
+@inproceedings{ntavakolizadeh2024,
   title={FaultQuake: An Open-Source Python Tool for Estimating Seismic Activity Rates in Faults},
   author={Tavakolizadeh, Nasrin and Mohammadigheymasi, Hamzeh and Matias, Lu{\'\i}s and Silveira, Gra{\c{c}}a and Fernandes, Rui and Dolatabadi, Nima},
   booktitle={Computers and Geosciences},
