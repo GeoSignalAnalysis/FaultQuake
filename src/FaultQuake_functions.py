@@ -9,7 +9,7 @@ Created on September 2023
 """
 
 """
-Runs Moment of Budget and Activity rate functions
+This module contains funcitons utilized in the FaultQuake workflow
 """
 
 
