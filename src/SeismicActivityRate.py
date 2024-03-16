@@ -1,3 +1,14 @@
+"""
+Created on September 2023
+
+@authors: Nasrin Tavakolizadeh, Hamzeh Mohammadigheymasi
+"""
+
+"""
+Runs Moment of Budget and Activity rate functions
+"""
+
+
 import math
 import numpy
 import numpy as np
