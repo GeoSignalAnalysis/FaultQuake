@@ -9,7 +9,7 @@ from scipy.stats import norm
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from scipy.stats import invgauss
-from scipy.io import loadmat
+import scipy.io
 
 
 import statsmodels.api as sm
@@ -58,7 +58,35 @@ import statsmodels.api as sm
 #         print(f"Item Name: {item_name}")
 #         mu_opt = ShearModulus * 1e10
 #         straindrop_opt = StrainDrop * 1e-5
-def momentbudget(faults, Zeta, Khi, Siggma, ProjFol):
+# def momentbudget(faults, Zeta, Khi, Siggma, ProjFol):
+#     for fault, values in faults.items():
+#         if 'ShearModulus' in values and (values['ShearModulus'] is None):
+#             print(f"Fault {fault} has a 'NaN' ShearModulus value.")
+#             values['ShearModulus'] = 3 * 1e10
+#         else:
+#             values['ShearModulus'] = values['ShearModulus'] * 1e10
+#
+#         if 'StrainDrop' in values and (values['StrainDrop'] is None):
+#             values['StrainDrop'] = 3 * 1e-5
+#         else:
+#             values['StrainDrop'] = values['StrainDrop'] * 1e-5
+#         if 'Last_eq_time' in values and (values['Last_eq_time'] is None):
+#             values['Last_eq_time'] = math.nan
+#     kk=1
+#     counter=0
+#     for fault_name in faults:
+#         ScR = faults[fault_name]['ScR']
+#         # Length = np.append(Length, faults[fault_name]['Length'])
+#         Length = faults[fault_name]['Length'];         Dip = faults[fault_name]['Dip'];   Seismogenic_thickness = faults[fault_name]['Seismogenic_Thickness']
+#         Slipmin = faults[fault_name]['SRmin'];         Slipmax = faults[fault_name]['SRmax'];         mag = faults[fault_name]['Mobs']
+#         sdmag = faults[fault_name]['sdMobs'];         Last_eq_time = faults[fault_name]['Last_eq_time'];         SCC = faults[fault_name]['SCC']
+#         ShearModulusFromInputFile = faults[fault_name]['ShearModulus'];         StrainDropFromInputFile = faults[fault_name]['StrainDrop']
+#         yfc = faults[fault_name]['year_for_calculations'];
+#         # Last_eq_time = "nan"
+#         # nan_value = np.nan if Last_eq_time.lower() == "nan" else Last_eq_time
+#         # if isnan(Last_eq_time):
+
+def momentbudget(faults, Zeta, Khi, Siggma, ProjFol, logical_nan,  logical_nan_sdmag):
     for fault, values in faults.items():
         if 'ShearModulus' in values and (values['ShearModulus'] is None):
             print(f"Fault {fault} has a 'NaN' ShearModulus value.")
@@ -70,19 +98,39 @@ def momentbudget(faults, Zeta, Khi, Siggma, ProjFol):
             values['StrainDrop'] = 3 * 1e-5
         else:
             values['StrainDrop'] = values['StrainDrop'] * 1e-5
-    kk=1
-    counter=0
+
+        if 'Last_eq_time' in values:
+            if values['Last_eq_time'] is None or str(values['Last_eq_time']).lower() == 'nan' or values['Last_eq_time'] == '':
+                if logical_nan:
+                    values['Last_eq_time'] = math.nan
+            else:
+                values['Last_eq_time'] = float(values['Last_eq_time'])
+
+        if 'sdmag' in values:
+            if values['sdmag'] is None or str(values['sdmag']).lower() == 'nan' or values['sdmag'] == '':
+                if logical_nan_sdmag:
+                    values['sdmag'] = math.nan
+            else:
+                values['sdmag'] = float(values['sdmag'])
+
+
+
+    kk = 1
+    counter = 0
     for fault_name in faults:
-        ScR = faults[fault_name]['ScR']
-        # Length = np.append(Length, faults[fault_name]['Length'])
-        Length = faults[fault_name]['Length'];         Dip = faults[fault_name]['Dip'];   Seismogenic_thickness = faults[fault_name]['Seismogenic_Thickness']
-        Slipmin = faults[fault_name]['SRmin'];         Slipmax = faults[fault_name]['SRmax'];         mag = faults[fault_name]['Mobs']
-        sdmag = faults[fault_name]['sdMobs'];         Last_eq_time = faults[fault_name]['Last_eq_time'];         SCC = faults[fault_name]['SCC']
-        ShearModulusFromInputFile = faults[fault_name]['ShearModulus'];         StrainDropFromInputFile = faults[fault_name]['StrainDrop']
-        yfc = faults[fault_name]['year_for_calculations'];
-        # Last_eq_time = "nan"
-        # nan_value = np.nan if Last_eq_time.lower() == "nan" else Last_eq_time
-        # if isnan(Last_eq_time):
+        flag_mobs=0
+        ScR = faults[fault_name]['ScR']; Length = faults[fault_name]['Length']; Dip = faults[fault_name]['Dip']
+        Seismogenic_thickness = faults[fault_name]['Seismogenic_Thickness']; Slipmin = faults[fault_name]['SRmin']
+        Slipmax = faults[fault_name]['SRmax']; mag = faults[fault_name]['Mobs']; sdmag = faults[fault_name]['sdMobs']
+        Last_eq_time = faults[fault_name]['Last_eq_time']; SCC = faults[fault_name]['SCC']
+        ShearModulusFromInputFile = faults[fault_name]['ShearModulus']
+        StrainDropFromInputFile = faults[fault_name]['StrainDrop']
+        yfc = faults[fault_name]['year_for_calculations']
+
+        if not math.isnan(Last_eq_time):
+            Telap = yfc - Last_eq_time  # Perform element-wise subtraction only if Last_eq_time is not NaN
+
+
         Telap = yfc - Last_eq_time  # Perform element-wise subtraction
         mu = ShearModulusFromInputFile;         straindrop = StrainDropFromInputFile;         Dip_radians = math.radians(Dip)  # Convert degrees to radians
         sine_Dip = math.sin(Dip_radians);        Length = Length * 1000;        Width = (Seismogenic_thickness * 1000) / sine_Dip
@@ -99,12 +147,15 @@ def momentbudget(faults, Zeta, Khi, Siggma, ProjFol):
         M = M[~np.isnan(M)];         dM1 = dM1[~np.isnan(dM1)];         Mmean = np.mean(M)
         M1 = mag - Mmean
         # Conflation of Maximum magnitudes
+        sdmagg=sdmag
         if mag < Mmean:
+            flag_mobs = 1
             if abs(mag - Mmean) < Zeta:
                 sdmag = sdmag
             elif abs(mag - Mmean) > Zeta:
                 sdmag = np.mean(dM1) + Khi * abs(mag - Mmean)
         else:
+            flag_mobs = 1
             if abs(mag - Mmean) < Zeta:
                 sdmag = sdmag
             elif abs(mag - Mmean) > Zeta:
@@ -144,8 +195,24 @@ def momentbudget(faults, Zeta, Khi, Siggma, ProjFol):
         summed_pdf_magnitudes = np.sum(pdf_magnitudes, axis=0)
         ############## Calculate conflated distribution using the previously defined conflate_pdfs function
         conflated = conflate_pdfs(x_range_of_mag, pdf_magnitudes)
-        weighted_mean = np.average(x_range_of_mag, weights=summed_pdf_magnitudes)
-        weighted_std = np.sqrt(np.average((x_range_of_mag - weighted_mean) ** 2, weights=summed_pdf_magnitudes))
+
+
+        mat_contents = scipy.io.loadmat('/home/nasrin/Projects/FiSHSCC/temp.mat')
+        Mmax2 = mat_contents['Mmax'].squeeze()
+        sigma_Mmax2 = mat_contents['sigma_Mmax'].squeeze()
+        x_range_of_mag2 = mat_contents['x_range_of_mag'].squeeze()
+        summed_pdf_magnitudes2 = mat_contents['summed_pdf_magnitudes'].squeeze()
+        pdf_magnitudes2 = mat_contents['pdf_magnitudes'].squeeze()
+
+
+        if flag_mobs==1:
+            pp= norm.pdf(x_range_of_mag, mag, sdmagg)
+
+            pdf_magnitudes[-1] = pdf_magnitudes[-1] * (np.trapz(pp)/np.trapz(pdf_magnitudes[-1]))
+
+        weighted_mean = np.average(x_range_of_mag2, weights=summed_pdf_magnitudes)
+        weighted_std = np.sqrt(np.average((x_range_of_mag2 - weighted_mean) ** 2, weights=summed_pdf_magnitudes))
+
         Mmax = weighted_mean
         sigma_Mmax = weighted_std
         pdf_test = norm.pdf(x_range_of_mag, Mmax, sigma_Mmax)
@@ -208,7 +275,7 @@ def momentbudget(faults, Zeta, Khi, Siggma, ProjFol):
         plt.fill_between(x_range_of_mag, 0, conflated, color='gold', alpha=0.25)
         plt.xlabel('Magnitude', fontsize=14, fontname='Times')
         plt.ylabel('Probability density function', fontsize=14, fontname='Times')
-        # plt.title(fault_name)
+        plt.title(fault_name)
         # Plot settings:
         plt.ylim(0,)
         plt.xlim(5,)
@@ -331,11 +398,6 @@ def sactivityrate(faults, Fault_behaviour, w, bin, ProjFol):
 
     Morate = Morate_fromTmean
 
-    # Assuming all the required variables are defined and available
-    # nfault, fixed_smr, Morate_fromTmean, Morate_input, Tmean_fromMorate, Tmean, etc.
-
-
-
     for i in range(nfault):
         if Morate_fromTmean[i] != Morate_input[i]:
             print(
@@ -343,7 +405,7 @@ def sactivityrate(faults, Fault_behaviour, w, bin, ProjFol):
     Hbpt = np.zeros(nfault)  # Initialize the Hbpt array
     Hpois = np.zeros(nfault)
     for i in range(nfault):
-        sdmag[i]=0.5
+        # sdmag[i]=0.5
         magnitude_range = np.arange(mag[i] - sdmag[i], mag[i] + sdmag[i] + bin, bin)
         M = 10 ** (c * magnitude_range + d)
         pdf_mag = norm.pdf(magnitude_range, mag[i], sdmag[i])
@@ -361,17 +423,7 @@ def sactivityrate(faults, Fault_behaviour, w, bin, ProjFol):
                     f'Warning: Telap for fault id {id[i]} is forced to be equal to 10*Tm to avoid computational problems')
             alpha = alpha_val[i]
 
-            # from scipy.io import loadmat
-            #
-            # # Load the MATLAB file
-            # mat_data = loadmat('./data_matlab.mat')
-            # Telap = mat_data['Telap']
-            # w = mat_data['w']
-            # Tm = mat_data['Tm']
-            # alpha = mat_data['alpha']
-
             scale = Tm / (alpha ** 2)
-            # In MATLAB: cdf('inversegaussian', (Telap+w), Tm, (Tm/(alpha^2)))
             # In Python: using scipy.stats.invgauss
             Hbpt_a1 = invgauss.cdf((Telap + w) / scale, mu=Tm / scale)
             Hbpt_a2 = invgauss.cdf((Telap) / scale, mu=Tm / scale)

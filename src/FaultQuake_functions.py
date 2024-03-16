@@ -14,6 +14,14 @@ import os
 # DATA = defaultdict(dict)
 
 import os
+import numpy as np
+from scipy.optimize import minimize
+from scipy.stats import norm
+
+import numpy as np
+from scipy.stats import norm
+from scipy.optimize import minimize
+
 
 def export_faults_to_xml(faults, Project_foldername):
     # Check if './output_files/Fault_OQ' folder exists, if not, create it
