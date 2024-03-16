@@ -1,3 +1,18 @@
+# FaultQuake_functions.py
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on September 2023
+
+@authors: Nasrin Tavakolizadeh, Hamzeh Mohammadigheymasi
+"""
+
+# This module is the main module of the FaultQuake tool to calculate the seismic activity rates of faults.
+
+
+
+
 from src.SeismicActivityRate import momentbudget, sactivityrate # Import the function
 import sys, argparse, json
 global faults
