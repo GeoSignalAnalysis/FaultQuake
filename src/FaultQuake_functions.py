@@ -1,5 +1,18 @@
 # FaultQuake_functions.py
 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on September 2023
+
+@authors: Nasrin Tavakolizadeh, Hamzeh Mohammadigheymasi
+"""
+
+"""
+Runs Moment of Budget and Activity rate functions
+"""
+
+
 import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
