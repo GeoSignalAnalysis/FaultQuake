@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>869</width>
-    <height>662</height>
+    <width>903</width>
+    <height>758</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,7 +63,7 @@
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>50</y>
+        <y>80</y>
         <width>141</width>
         <height>41</height>
        </rect>
@@ -525,10 +525,10 @@
      <widget class="QPushButton" name="pushButton_2">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>380</y>
-        <width>231</width>
-        <height>41</height>
+        <x>120</x>
+        <y>500</y>
+        <width>201</width>
+        <height>71</height>
        </rect>
       </property>
       <property name="palette">
@@ -976,7 +976,7 @@
       <property name="font">
        <font>
         <family>Times New Roman</family>
-        <pointsize>18</pointsize>
+        <pointsize>20</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
@@ -988,8 +988,8 @@
      <widget class="QComboBox" name="comboBox">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>170</y>
+        <x>30</x>
+        <y>250</y>
         <width>391</width>
         <height>41</height>
        </rect>
@@ -1464,8 +1464,8 @@
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>120</y>
+        <x>60</x>
+        <y>190</y>
         <width>291</width>
         <height>41</height>
        </rect>
@@ -1496,7 +1496,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>0</y>
+        <y>30</y>
         <width>181</width>
         <height>41</height>
        </rect>
@@ -1527,7 +1527,7 @@
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>260</y>
+        <y>350</y>
         <width>241</width>
         <height>41</height>
        </rect>
@@ -1557,8 +1557,8 @@
      <widget class="QTextEdit" name="textEdit">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>310</y>
+        <x>130</x>
+        <y>400</y>
         <width>181</width>
         <height>41</height>
        </rect>
@@ -2084,7 +2084,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>110</y>
+        <y>430</y>
         <width>81</width>
         <height>41</height>
        </rect>
@@ -2115,7 +2115,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>10</y>
+        <y>350</y>
         <width>261</width>
         <height>21</height>
        </rect>
@@ -2146,15 +2146,15 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>420</y>
-        <width>121</width>
+        <y>550</y>
+        <width>91</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Times New Roman</family>
-        <pointsize>16</pointsize>
+        <pointsize>13</pointsize>
         <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
@@ -2176,9 +2176,9 @@
      <widget class="QTextEdit" name="textEdit_3">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>351</width>
+        <x>110</x>
+        <y>390</y>
+        <width>201</width>
         <height>31</height>
        </rect>
       </property>
@@ -2219,13 +2219,20 @@
         </disabled>
        </palette>
       </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
      </widget>
      <widget class="QTextEdit" name="textEdit_4">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>150</y>
-        <width>351</width>
+        <x>110</x>
+        <y>470</y>
+        <width>201</width>
         <height>31</height>
        </rect>
       </property>
@@ -2270,16 +2277,16 @@
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>460</y>
-        <width>291</width>
+        <x>100</x>
+        <y>590</y>
+        <width>231</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Times New Roman</family>
-        <pointsize>17</pointsize>
+        <pointsize>14</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
@@ -2291,16 +2298,16 @@
      <widget class="QPushButton" name="pushButton_5">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>510</y>
-        <width>291</width>
+        <x>100</x>
+        <y>640</y>
+        <width>231</width>
         <height>41</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Times New Roman</family>
-        <pointsize>17</pointsize>
+        <pointsize>14</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
@@ -2312,9 +2319,130 @@
      <widget class="QPushButton" name="pushButton_6">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>560</y>
-        <width>291</width>
+        <x>100</x>
+        <y>690</y>
+        <width>231</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Times New Roman</family>
+        <pointsize>14</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>FaultQuke output file format</string>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_3">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>60</y>
+        <width>371</width>
+        <height>171</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_8">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>171</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>15</pointsize>
+         <weight>75</weight>
+         <italic>true</italic>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>OVCW Parameters:</string>
+       </property>
+      </widget>
+      <widget class="QTextBrowser" name="textBrowser">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>60</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QTextBrowser" name="textBrowser_2">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>110</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_9">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>60</y>
+         <width>51</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KHi:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_10">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>110</y>
+         <width>41</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Zeta:</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>10</y>
+        <width>161</width>
         <height>41</height>
        </rect>
       </property>
@@ -2322,12 +2450,50 @@
        <font>
         <family>Times New Roman</family>
         <pointsize>17</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="text">
-       <string>FaultQuke output file format</string>
+       <string>Optional Inputs:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>260</y>
+        <width>251</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Times New Roman</family>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Mw(M0) Standard Deviation:</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_3">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>290</y>
+        <width>201</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </widget>

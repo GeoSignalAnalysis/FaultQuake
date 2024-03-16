@@ -312,10 +312,6 @@ class Ui_Frame(object):
         self.textEdit_4.setObjectName("textEdit_4")
 
 
-
-
-
-
         # Descriptions pannel
         self.pushButton_3 = QtWidgets.QPushButton(self.frame_2)
         self.pushButton_3.setObjectName("pushButton_3")
@@ -365,18 +361,6 @@ class Ui_Frame(object):
         font.setWeight(75)
         self.label_8.setFont(font)
         self.label_8.setObjectName("label_8")
-
-
-
-        # self.textBrowser = QtWidgets.QTextBrowser(self.frame_3)
-        # self.textBrowser.setGeometry(QtCore.QRect(160, 60, 101, 31))
-        # self.textBrowser.setObjectName("textBrowser")
-
-
-
-        # self.textBrowser_2 = QtWidgets.QTextBrowser(self.frame_3)
-        # self.textBrowser_2.setGeometry(QtCore.QRect(160, 110, 101, 31))
-        # self.textBrowser_2.setObjectName("textBrowser_2")
 
 
         # Zeta
@@ -502,7 +486,7 @@ class Ui_Frame(object):
 
 
 
-        faults_u = momentbudget(faults, Zeta, Khi, Siggma, ProjFol='output_files')
+        faults_u = momentbudget(faults, Zeta, Khi, Siggma, ProjFol='output_files', logical_nan='NAN, "",NaN',  logical_nan_sdmag='NAN, "",NaN')
         if ProjFol == '':
             ProjFol == 'output_files'
         sactivityrate(faults_u, mfdo, PTI, MBS, ProjFol='output_files')
