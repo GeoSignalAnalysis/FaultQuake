@@ -8,8 +8,7 @@ Created on September 2023
 Runs Moment of Budget and Activity rate functions
 """
 
-
-import math
+ import math
 import numpy
 import numpy as np
 import os
@@ -24,7 +23,6 @@ import scipy.io
 
 
 import statsmodels.api as sm
-
 
 
 
@@ -139,21 +137,14 @@ def momentbudget(faults, Zeta, Khi, Siggma, ProjFol, logical_nan,  logical_nan_s
         conflated = conflate_pdfs(x_range_of_mag, pdf_magnitudes)
 
 
-        mat_contents = scipy.io.loadmat('/home/nasrin/Projects/FiSHSCC/temp.mat')
-        Mmax2 = mat_contents['Mmax'].squeeze()
-        sigma_Mmax2 = mat_contents['sigma_Mmax'].squeeze()
-        x_range_of_mag2 = mat_contents['x_range_of_mag'].squeeze()
-        summed_pdf_magnitudes2 = mat_contents['summed_pdf_magnitudes'].squeeze()
-        pdf_magnitudes2 = mat_contents['pdf_magnitudes'].squeeze()
-
 
         if flag_mobs==1:
             pp= norm.pdf(x_range_of_mag, mag, sdmagg)
 
             pdf_magnitudes[-1] = pdf_magnitudes[-1] * (np.trapz(pp)/np.trapz(pdf_magnitudes[-1]))
 
-        weighted_mean = np.average(x_range_of_mag2, weights=summed_pdf_magnitudes)
-        weighted_std = np.sqrt(np.average((x_range_of_mag2 - weighted_mean) ** 2, weights=summed_pdf_magnitudes))
+        weighted_mean = np.average(x_range_of_mag, weights=summed_pdf_magnitudes)
+        weighted_std = np.sqrt(np.average((x_range_of_mag - weighted_mean) ** 2, weights=summed_pdf_magnitudes))
 
         Mmax = weighted_mean
         sigma_Mmax = weighted_std
@@ -386,6 +377,10 @@ def sactivityrate(faults, Fault_behaviour, w, bin, ProjFol):
         TruncatedGR(faults, c, d, ProjFol, fault_name, mag, mt, Morate, id, nfault, bin, b)
     else:
         print("wrong case")
+
+
+
+
 
 
 
