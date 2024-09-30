@@ -26,76 +26,7 @@ import scipy.io
 import statsmodels.api as sm
 
 
-# def momentbudget():
-# ShearModulusFromInputFile = ShearModulusFromInput
-# StrainDropFromInputFile = StrainDropFromInput
-# if ShearModulusFromInputFile is None:
-#     ShearModulusFromInputFile = 0
-# if StrainDropFromInputFile is None:
-#     StrainDropFromInputFile = 0
-# warning_off()
-# if ShearModulus is None and ShearModulusFromInputFile != 1:
-#     print("Warning: Shear modulus - You are using the default value 3*10^10 Pa")
-#     ShearModulus = 3
-# if StrainDrop is None and StrainDropFromInputFile != 1:
-#     print("Warning: Strain Drop - You are using the default value 3*10^-5")
-#     StrainDrop = 3
-# if n_sigma is None or np.isnan(n_sigma):
-#     print("Warning: You are using untruncated Gaussian distributions for magnitudes")
-#     n_sigma_trunc_magnitudes = 0
-# else:
-#     n_sigma_trunc_magnitudes = n_sigma
-# outputfile = os.path.join('./output_files', f'{outputname}_MB.txt')
-# with open(outputfile, 'w') as fidout:
-#     fidout.write('id Mmax sdMmax Tmean CV Telap Mo-rate name\n')
-# temporary_pdf_storage = open('./output_files/temporary_pdf_storage.txt', 'w')
-# print('RUNNING...')
-# for item_name in faults:
-#     print(f"Item Name: {item_name}")
-# # mu_opt, straindrop_opt = ShearModulus, StrainDrop
-# # if ShearModulusFromInputFile != 1:
-#     mu_opt = ShearModulus * 1e10
-# # if StrainDropFromInputFile != 1:
-#     straindrop_opt = StrainDrop * 1e-5
-# with open(imfile, 'r') as fid2:
-#     raw = fid2.read()
-# DATA = json.loads(raw)
-# fault_name = list(DATA.keys())
-# def momentbudget():
-#
-#     faults = self.browse_file()
-#
-#     for item_name in faults:
-#         print(f"Item Name: {item_name}")
-#         mu_opt = ShearModulus * 1e10
-#         straindrop_opt = StrainDrop * 1e-5
-# def momentbudget(faults, Zeta, Khi, Siggma, ProjFol):
-#     for fault, values in faults.items():
-#         if 'ShearModulus' in values and (values['ShearModulus'] is None):
-#             print(f"Fault {fault} has a 'NaN' ShearModulus value.")
-#             values['ShearModulus'] = 3 * 1e10
-#         else:
-#             values['ShearModulus'] = values['ShearModulus'] * 1e10
-#
-#         if 'StrainDrop' in values and (values['StrainDrop'] is None):
-#             values['StrainDrop'] = 3 * 1e-5
-#         else:
-#             values['StrainDrop'] = values['StrainDrop'] * 1e-5
-#         if 'Last_eq_time' in values and (values['Last_eq_time'] is None):
-#             values['Last_eq_time'] = math.nan
-#     kk=1
-#     counter=0
-#     for fault_name in faults:
-#         ScR = faults[fault_name]['ScR']
-#         # Length = np.append(Length, faults[fault_name]['Length'])
-#         Length = faults[fault_name]['Length'];         Dip = faults[fault_name]['Dip'];   Seismogenic_thickness = faults[fault_name]['Seismogenic_Thickness']
-#         Slipmin = faults[fault_name]['SRmin'];         Slipmax = faults[fault_name]['SRmax'];         mag = faults[fault_name]['Mobs']
-#         sdmag = faults[fault_name]['sdMobs'];         Last_eq_time = faults[fault_name]['Last_eq_time'];         SCC = faults[fault_name]['SCC']
-#         ShearModulusFromInputFile = faults[fault_name]['ShearModulus'];         StrainDropFromInputFile = faults[fault_name]['StrainDrop']
-#         yfc = faults[fault_name]['year_for_calculations'];
-#         # Last_eq_time = "nan"
-#         # nan_value = np.nan if Last_eq_time.lower() == "nan" else Last_eq_time
-#         # if isnan(Last_eq_time):
+
 
 def momentbudget(faults, Zeta, Khi, Siggma, ProjFol, logical_nan,  logical_nan_sdmag):
     for fault, values in faults.items():
