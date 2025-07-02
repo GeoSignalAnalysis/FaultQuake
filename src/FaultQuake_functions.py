@@ -525,7 +525,7 @@ def conflate_pdfs(x, pdfs):
     conflated = np.ones(x.shape) / (x[-1] - x[0])
 
     for i in range(pdfs.shape[0]):
-        pdf = pdfs[i, :] / np.trapz(x, pdfs[i, :])
+        pdf = pdfs[i, :] / trapezoid(x, pdfs[i, :])
         conflated = conflated * pdf
 
     # Normalize the conflated distribution
