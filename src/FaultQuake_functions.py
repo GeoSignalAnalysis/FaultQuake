@@ -16,7 +16,7 @@ This module contains funcitons utilized in the FaultQuake workflow
 import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
-from scipy.integrate import trapz
+from scipy.integrate import trapezoid
 import math
 import numpy as np
 import matplotlib.pyplot as plt
